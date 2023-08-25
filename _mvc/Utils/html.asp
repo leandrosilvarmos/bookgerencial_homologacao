@@ -1,0 +1,675 @@
+<%
+Class cExtendedHTMLHelper
+
+    Public Function Encode (elValue)
+        If Not IsNothing(elValue) Then
+            Encode = Server.HTMLEncode(elValue)
+        End If
+    End Function
+
+    Public Function Display (pObj, pMetadata)
+        If Not IsNothing(pMetadata) Then
+            Dim i
+    
+            i = GetObjMetadataIndex(pObj, pMetadata)
+
+            Display = Eval("pObj.Display(" & i & ")")
+        End If
+    End Function
+
+    Public Function Label (elValue, objfor, attribs)
+        Label = "<label for=" & chr(34) & objfor & chr(34) & attribs & ">" & Encode(elValue) & "</label>"
+    End Function
+
+    Public Function LabelFor (pObj, pMetadata, attribs)
+        LabelFor = "<label for=" & chr(34) & pMetadata & chr(34) & attribs & ">" & Display(pObj, pMetadata) & "</label>"
+    End Function
+
+    Public Function Hidden ( elID, elValue, attribs)
+        Hidden =  "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " type="&chr(34)&"hidden"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " " & attribs & " />"
+    End Function
+
+    Public Function TextBox (elId, elValue, attribs)
+        TextBox = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " type="&chr(34)&"text"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " " & attribs & " " & IsRequired(Model, elId) & " " & GetMaxlength(Model, elId) & " />"
+    End Function
+
+    Public Function PasswordBox (elId, elValue, attribs)
+        PasswordBox = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " type="&chr(34)&"password"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " " & attribs & " " & IsRequired(Model, elId) & " " & GetMaxlength(Model, elId) & " />"
+    End Function
+
+    Public Function TextBoxNm (elId, elName, elValue, attribs)
+        TextBoxNm = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elName & chr(34) & " type="&chr(34)&"text"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " " & attribs & " " & IsRequired(Model, elId) & " " & GetMaxlength(Model, elId) & " />"
+    End Function
+
+    Public Function NumTextBox (elId, elValue, attribs)
+        NumTextBox = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " type="&chr(34)&"number"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " " & attribs & " " & IsRequired(Model, elId) & " " & GetMaxlength(Model, elId) & " />"
+    End Function
+
+    Public Function TextArea (elId, elValue, cols, rows, attribs)
+        TextArea = "<textarea id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " cols=" & chr(34) & Encode(cols) & chr(34) & " rows=" & chr(34) & Encode(rows) & chr(34) & " " & attribs & " " & IsRequired(Model, elId) & " " & GetMaxlength(Model, elId) & " >" & _
+                    Encode(elValue) & _
+                   "</textarea>"
+    End Function
+
+    Public Function TextAreaNm (elId, elName, elValue, cols, rows, attribs)
+        TextAreaNm = "<textarea id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elName & chr(34) & " cols=" & chr(34) & Encode(cols) & chr(34) & " rows=" & chr(34) & Encode(rows) & chr(34) & " " & attribs & " " & IsRequired(Model, elId) & " " & GetMaxlength(Model, elId) & " >" & _
+                    Encode(elValue) & _
+                   "</textarea>"
+    End Function
+
+    Public Function DropDownList (elId, elValue, list , idName, valueName, attribs)
+        Dim resStr, lisItem, optRequired
+
+        resStr = "<select id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & attribs & " " & IsRequired(Model, elId) & ">"
+    
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+            resStr = resStr & "<option value=" & chr(34) & chr(34) &"></option>"
+        End If
+
+        If Not IsNothing(list) Then
+
+	        For Each listItem In List.Items
+	            Dim optValue, optText, optSelected
+
+	            optSelected = ""
+
+	            optValue = Eval("listItem." & idName)
+	            optText  = Eval("listItem." & valueName)
+
+		    	If Not IsNothing(elValue) And Not IsNull(elValue) Then
+		    		For Each vVal In Split(elValue,",")
+	            		If Trim(CStr(vVal)) = Trim(CStr(optValue)) Then
+	            	    	optSelected = "selected="&chr(34)&"selected"&chr(34)
+	            		End If
+		    		Next
+		    	End If
+
+	            resStr = resStr & "<option "&optSelected&" value=" & chr(34) & Encode(optValue) & chr(34) & ">" & Encode(optText) & "</option>"
+	        Next
+
+        End If
+
+        resStr = resStr & "</select>"
+
+        DropDownList = resStr
+    End Function
+
+    Public Function DropDownListNm (elId, elName, elValue, list , idName, valueName, attribs)
+        Dim resStr, lisItem
+
+        resStr = "<select id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elName & chr(34) & " " & attribs & ">"
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+        End If
+
+        If Not IsNothing(list) Then
+
+	        For Each listItem In List.Items
+	            Dim optValue, optText, optSelected
+
+	            optSelected = ""
+
+	            optValue = Eval("listItem." & idName)
+	            optText  = Eval("listItem." & valueName)
+
+		    	If Not IsNothing(elValue) And Not IsNull(elValue) Then
+		    		For Each vVal In Split(elValue,",")
+	            		If Trim(CStr(vVal)) = Trim(CStr(optValue)) Then
+	                		optSelected = "selected="&chr(34)&"selected"&chr(34)
+	            		End If
+		    		Next
+		    	End If
+
+	            resStr = resStr & "<option "&optSelected&" value=" & chr(34) & Encode(optValue) & chr(34) & ">" & Encode(optText) & "</option>"
+	        Next
+
+        End If
+
+        resStr = resStr & "</select>"
+
+        DropDownListNm = resStr
+    End Function
+
+    Public Function DropDownListEnum (elId, elValue, nameEnum, attribs)
+        If IsEmpty(elValue) Or IsNull(elValue) Then
+            elValue = ""
+        End If
+
+        DropDownListEnum = DropDownList (elId, elValue, GetEnumList(nameEnum), "Valor", "Descricao", attribs)
+    End Function
+
+    Public Function DropDownListDb(elId, elValue, list, idName, valueName, attribs)
+        Dim resStr, lisItem
+
+        resStr = "<select id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " " & attribs & ">"
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+
+            resStr = resStr & "<option value=" & chr(34) & chr(34) &"></option>"
+        End If
+
+        If Not IsNothing(list) Then
+
+            For i = 0 To (list.Count - 1) Step 1
+                Dim optValue, optText, optSelected
+
+                optSelected = ""
+
+                optValue  = list.GetValue(idName,i) 
+                optText   = list.GetValue(valueName,i)
+        
+                If UCase(CStr(elValue)) = "@FIRST" Then
+                    If i = 0 Then
+                        optSelected = "selected="&chr(34)&"selected"&chr(34)
+                    End If
+                ElseIf UCase(CStr(elValue)) = "@LAST" Then
+                    If i = (list.Count - 1) Then
+                        optSelected = "selected="&chr(34)&"selected"&chr(34)
+                    End If
+                ElseIf CStr(elValue) = CStr(optValue) Then
+                    optSelected = "selected="&chr(34)&"selected"&chr(34)
+                End If
+
+                resStr = resStr & "<option "&optSelected&" value=" & chr(34) & Encode(optValue) & chr(34) & ">" & Encode(optText) & "</option>"
+            Next
+
+        End If
+
+        resStr = resStr & "</select>"
+
+        DropDownListDb = resStr
+    End Function
+
+    Public Function RadioButtonList (elId, elValue, list, idName, valueName, attribs)
+        Dim resStr, lisItem
+
+        resStr = ""
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+        End If
+
+        If Not IsNothing(list) Then
+        	
+	        For Each listItem In List.Items
+	            Dim optValue, optText, optChecked, optRequired
+
+	            If resStr = "" Then
+	                optRequired = " " & IsRequired(Model, elId)
+	            End If
+
+	            optChecked = ""
+
+	            optValue = Eval("listItem." & idName)
+	            optText  = Eval("listItem." & valueName)
+
+	            If CStr(elValue) = CStr(optValue) Then
+	                optChecked = "checked="&chr(34)&"checked"&chr(34)
+	            End If
+
+	            resStr = resStr & "<input type=" & chr(34) & "radio" & chr(34) & " id=" & chr(34) & elId & "_" & optValue & chr(34) & " name=" & chr(34) & elId & chr(34) & " value=" & chr(34) & optValue & chr(34) & optChecked & attribs & optRequired & "/>  "
+	            resStr = resStr & Label(optText, elId & "_" & optValue, "")
+	        Next
+
+    	End If
+
+        RadioButtonList = resStr
+    End Function
+
+    Public Function RadioButtonListEnum (elId, elValue, nameEnum, attribs)
+        If IsEmpty(elValue) Or IsNull(elValue) Then
+            elValue = ""
+        End If
+
+        RadioButtonListEnum = RadioButtonList (elId, elValue, GetEnumList(nameEnum), "Valor", "Descricao", attribs)
+    End Function
+
+    Public Function ActionLink(linkText, linkController, linkAction , linkVars, attribs)
+        Dim strVars
+
+        If IsEmpty(linkVars) Or IsNull(linkVars) Then
+            strVars = ""
+        Else
+            If IsArray(linkVars) Then
+                For Each varPair In linkVars
+                    strVars  = strVars & "&" & varPair
+                Next
+            Else
+                strVars = linkVars
+            End If
+        End If
+
+        If (strVars<>"") Then
+            strVars = "&" & strVars
+        End If
+
+        ActionLink = "<a href=" & chr(34) & "?controller=" & Encode(linkController)& "&action=" & Encode(linkAction)  &   Encode(strVars) & chr(34) & " " & attribs & ">" & Encode(linkText) & "</a>"
+    End Function
+
+    Public Function ActionUrl(linkController, linkAction , linkVars, attribs)
+        Dim strVars
+
+        If IsEmpty(linkVars) Or IsNull(linkVars) Then
+            strVars = ""
+        Else
+            If IsArray(linkVars) Then
+                For Each varPair In linkVars
+                    strVars  = strVars & "&" & varPair
+                Next
+            Else
+                strVars = linkVars
+            End If
+        End If
+
+        If (strVars<>"") Then
+            strVars = "&" & strVars
+        End If
+
+        ActionUrl = "?controller=" & Encode(linkController)& "&action=" & Encode(linkAction)  &   Encode(strVars) & "&partial=true"&chr(34)&" " & attribs
+    End Function
+
+    Public Function CheckBox( elId, elValue, attribs )
+        Dim checked
+
+        If (elValue = 1) Or (elValue = true) Or (LCase(elValue) = "true") Then
+            checked = "checked"
+        Else
+            checked = ""
+        End If
+
+        TextArea = "<input type="&chr(34)&"checkbox"&chr(34)&" id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " " & checked & " " & attribs & " />"
+
+        Encode(elValue)
+    End Function
+
+End Class
+
+Class cHTMLHelper
+
+    Public Function Encode (elValue)
+        If Not IsNothing(elValue) Then
+            Encode = Server.HTMLEncode(elValue)
+        End If
+    End Function
+
+    Public Function Display (pObj, pMetadata)
+        If Not IsNothing(pMetadata) Then
+            Dim i
+    
+            i = GetObjMetadataIndex(pObj, pMetadata)
+
+            Display = Eval("pObj.Display(" & i & ")")
+        End If
+    End Function
+
+    Public Function Label (elValue, objfor)
+        Label = "<label for=" & chr(34) & objfor & chr(34) & ">" & Encode(elValue) & "</label>"
+    End Function
+
+    Public Function LabelFor (pObj, pMetadata)
+        Label = "<label for=" & chr(34) & pMetadata & ">" & Display(pObj, pMetadata) & "</label>"
+    End Function
+
+    Public Function Hidden ( elID, elValue)
+        Hidden = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " type="&chr(34)&"hidden"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " />"
+    End Function
+
+    Public Function HiddenNm ( elID, elName, elValue)
+        HiddenNm = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elName & chr(34) & " type="&chr(34)&"hidden"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " />"
+    End Function
+
+    Public Function TextBox (elId, elValue)
+        TextBox = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " type="&chr(34)&"text"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " />"
+    End Function
+
+    Public Function PasswordBox (elId, elValue)
+        PasswordBox = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " type="&chr(34)&"password"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " />"
+    End Function
+
+    Public Function NumTextBox (elId, elValue)
+        NumTextBox = "<input id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " type="&chr(34)&"number"&chr(34)&" value=" & chr(34) & Encode(elValue) & chr(34) & " />"
+    End Function
+
+    Public Function TextArea (elId, elValue, cols, rows)
+        TextArea = "<textarea id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " cols=" & chr(34) & Encode(cols) & chr(34) & " rows=" & chr(34) & Encode(rows) & chr(34) & ">" & _
+                    Encode(elValue) & _
+                   "</textarea>"
+    End Function
+
+    Public Function DropDownList (elId, elValue, list , idName, valueName)
+        Dim resStr, lisItem
+
+        resStr = "<select id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & ">"
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+
+            resStr = resStr & "<option value=" & chr(34) & chr(34) &"></option>"
+        End If
+
+        If Not IsNothing(list) Then
+
+	        For Each listItem In List.Items
+	            Dim optValue, optText, optSelected
+
+	            optSelected = ""
+
+	            optValue = Eval("listItem." & idName)
+	            optText  = Eval("listItem." & valueName)
+
+		    	If Not IsNothing(elValue) And Not IsNull(elValue) Then
+		    		For Each vVal In Split(elValue,",")
+	            		If Trim(CStr(vVal)) = Trim(CStr(optValue)) Then
+	                		optSelected = "selected="&chr(34)&"selected"&chr(34)
+	            		End If
+		    		Next
+		    	End If
+
+	            resStr = resStr & "<option "&optSelected&" value=" & chr(34) & Encode(optValue) & chr(34) & ">" & Encode(optText) & "</option>"
+	        Next
+
+        End If
+
+        resStr = resStr & "</select>"
+
+        DropDownList = resStr
+    End Function
+
+    Public Function DropDownListEnum (elId, elValue, nameEnum)
+        If IsEmpty(elValue) Or IsNull(elValue) Then
+            elValue = ""
+        End If
+
+        DropDownListEnum = DropDownList (elId, elValue, GetEnumList(nameEnum), "Valor", "Descricao")
+    End Function
+
+    Public Function DropDownListDb (elId, elValue, list, idName, valueName)
+        Dim resStr, lisItem
+
+        resStr = "<select id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & ">"
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+
+            resStr = resStr & "<option value=" & chr(34) & chr(34) &"></option>"
+        End If
+
+        If Not IsNothing(list) Then
+
+            For i = 0 To (list.Count - 1) Step 1
+                Dim optValue, optText, optSelected
+
+                optSelected = ""
+
+                optValue  = list.GetValue(idName,i) 
+                optText   = list.GetValue(valueName,i)
+
+	    		If Not IsNothing(elValue) And Not IsNull(elValue) Then
+	    			For Each vVal In Split(elValue,",")
+                		If Trim(CStr(vVal)) = Trim(CStr(optValue))Then
+                		    optSelected = "selected="&chr(34)&"selected"&chr(34)
+                		End If
+	    			Next
+	    		End If
+
+                resStr = resStr & "<option "&optSelected&" value=" & chr(34) & Encode(optValue) & chr(34) & ">" & Encode(optText) & "</option>"
+            Next
+
+        End If
+
+        resStr = resStr & "</select>"
+
+        DropDownListDb = resStr
+    End Function
+
+    Public Function DropDownListGroup (elId, elValue, list, idName, valueName, grpIdName, grpTextName)
+        Dim resStr, lisItem, otpGrpIdTemp
+
+        resStr = "<select id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & ">"
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+
+            resStr = resStr & "<option value=" & chr(34) & chr(34) &"></option>"
+        End If
+
+        otpGrpIdTemp = ""
+
+        If Not IsNothing(list) Then
+
+	        For Each listItem In List.Items
+	            Dim optValue, optText, optSelected, otpIdGrp, otpTxtGrp
+
+	            optSelected = ""
+
+	            optValue  = Eval("listItem." & idName)
+	            optText   = Eval("listItem." & valueName)
+	            otpIdGrp  = Eval("listItem." & grpIdName)
+	            otpTxtGrp = Eval("listItem." & grpTextName)
+
+	            If otpIdGrp <> otpGrpIdTemp Then
+	                If otpGrpIdTemp <> "" Then
+	                    resStr = resStr & "</optgroup>"
+	                End If
+
+	                resStr = resStr & "<optgroup label="&chr(34)&otpTxtGrp&chr(34)&">"
+	            End If
+
+		    	If Not IsNothing(elValue) And Not IsNull(elValue) Then
+		    		For Each vVal In Split(elValue,",")
+	            		If CStr(elValue) = CStr(optValue) Then
+	            	    	optSelected = "selected="&chr(34)&"selected"&chr(34)
+	            		End If
+		    		Next
+		    	End If
+
+	            resStr = resStr & "<option "&optSelected&" value=" & chr(34) & Encode(optValue) & chr(34) & ">" & Encode(optText) & "</option>"
+
+	            otpGrpIdTemp = otpIdGrp
+	        Next
+
+	    End If
+
+        If otpGrpIdTemp <> "" Then
+            resStr = resStr & "</optgroup>"
+        End If
+
+        resStr = resStr & "</select>"
+
+        DropDownListGroup = resStr
+    End Function
+
+    Public Function DropDownListGroupDb(elId, elValue, list, idName, valueName, grpIdName, grpTextName)
+        Dim resStr, lisItem, otpGrpIdTemp
+
+        resStr = "<select id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & ">"
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+
+            resStr = resStr & "<option value=" & chr(34) & chr(34) &"></option>"
+        End If
+
+        otpGrpIdTemp = ""
+
+        If Not IsNothing(list) Then
+
+            For i = 0 To (list.Count - 1) Step 1
+                Dim optValue, optText, optSelected, otpIdGrp, otpTxtGrp
+
+                optSelected = ""
+
+                optValue  = list.GetValue(idName,i) 
+                optText   = list.GetValue(valueName,i)
+                otpIdGrp  = list.GetValue(grpIdName,i)
+                otpTxtGrp = list.GetValue(grpTextName,i)
+
+                If otpIdGrp <> otpGrpIdTemp Then
+                    If otpGrpIdTemp <> "" Then
+                        resStr = resStr & "</optgroup>"
+                    End If
+
+                    resStr = resStr & "<optgroup label="&chr(34)&otpTxtGrp&chr(34)&">"
+                End If
+
+	    		If Not IsNothing(elValue) And Not IsNull(elValue) Then
+	    			For Each vVal In Split(elValue,",")
+                		If Trim(CStr(vVal)) = Trim(CStr(optValue)) Then
+                	    	optSelected = "selected="&chr(34)&"selected"&chr(34)
+                		End If
+	    			Next
+	    		End If
+
+                resStr = resStr & "<option "&optSelected&" value=" & chr(34) & Encode(optValue) & chr(34) & ">" & Encode(optText) & "</option>"
+
+                otpGrpIdTemp = otpIdGrp
+            Next
+
+            If otpGrpIdTemp <> "" Then
+                resStr = resStr & "</optgroup>"
+            End If
+
+        End If
+
+        resStr = resStr & "</select>"
+
+        DropDownListGroupDb = resStr
+    End Function
+
+    Public Function RadioButtonList (elId, elValue, list, idName, valueName)
+        Dim resStr, lisItem
+
+        resStr = ""
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+        End If
+
+        If Not IsNothing(list) Then
+
+	        For Each listItem In List.Items
+	            Dim optValue, optText, optChecked, optRequired
+
+	            If resStr = "" Then
+	                optRequired = " " & IsRequired(Model, elId)
+	            End If
+
+	            optChecked = ""
+
+	            optValue = Eval("listItem." & idName)
+	            optText  = Eval("listItem." & valueName)
+
+	            If CStr(elValue) = CStr(optValue) Then
+	                optChecked = "checked="&chr(34)&"checked"&chr(34)
+	            End If
+
+	            resStr = resStr & "<input type=" & chr(34) & "radio" & chr(34) & " id=" & chr(34) & elId & "_" & optValue & chr(34) & " name=" & chr(34) & elId & chr(34) & " value=" & chr(34) & optValue & chr(34) & optChecked & optRequired & "/>  "
+	            resStr = resStr & Label(optText, elId & "_" & optValue) & "   "
+	        Next
+
+	    End If
+
+        RadioButtonList = resStr
+    End Function
+
+    Public Function RadioButtonListEnum (elId, elValue, nameEnum)
+        If IsEmpty(elValue) Or IsNull(elValue) Then
+            elValue = ""
+        End If
+
+        RadioButtonListEnum = RadioButtonList(elId, elValue, GetEnumList(nameEnum), "Valor", "Descricao")
+    End Function
+
+    Public Function ActionLink(linkText, linkController, linkAction , linkVars)
+        Dim strVars
+
+        If IsEmpty(linkVars) Or IsNull(linkVars) Then
+            strVars = ""
+        Else
+            If IsArray(linkVars) Then
+                For Each varPair In linkVars
+                    strVars  = strVars & "&" & varPair
+                Next
+            Else
+                strVars = linkVars
+            End If
+        End If
+
+        If (strVars<>"") Then
+            strVars = "&" & strVars
+        End If
+
+        ActionLink = "<a href="&chr(34)&"?controller=" & Encode(linkController)& "&action=" & Encode(linkAction)  &   Encode(strVars) & chr(34) & ">" & Encode(linkText) & "</a>"
+    End Function
+
+    Public Function ActionUrl(linkController, linkAction , linkVars)
+        Dim strVars
+
+        If IsEmpty(linkVars) Or IsNull(linkVars) Then
+            strVars = ""
+        Else
+            If IsArray(linkVars) Then
+                For Each varPair In linkVars
+                    strVars  = strVars & "&" & varPair
+                Next
+            Else
+                strVars = linkVars
+            End If
+        End If
+
+        If (strVars<>"") Then
+            strVars = "&" & strVars
+        End If
+
+        ActionUrl = "?controller=" & Encode(linkController)& "&action=" & Encode(linkAction)  &   Encode(strVars)
+    End Function
+
+    Public Function CheckBox( elId, elValue)
+        Dim checked
+
+        If IsEmpty(elValue) Or IsNull(elValue) Or elValue = "" Then
+            elValue = ""
+        End If
+
+        If (CStr(elValue) = "1") Or (CStr(LCase(elValue)) = "true")  Then
+            checked = "CHECKED"
+        Else
+            checked = ""
+        End If
+
+        CheckBox = "<input type="&chr(34)&"checkbox"&chr(34)&" id=" & chr(34) & elID & chr(34) & " name=" & chr(34) & elID & chr(34) & " " & checked & " />"
+
+        Encode(elValue)
+    End Function
+
+    Public Sub RenderControllerAction(controller,action,vars)
+        Dim controllerName
+
+        controllerName = controller & "Controller"
+
+        Dim controllerInstance
+
+        Set controllerInstance = Eval ( " new " &  controllerName)
+
+        Dim actionCallString
+
+        If Not (IsNothing(vars)) Then
+            actionCallString = " controllerInstance." & action & "(vars)"
+        Else
+            actionCallString = " controllerInstance." & action & "()"
+        End If
+
+        Eval (actionCallString)
+    End Sub
+
+
+End Class
+
+Public Html, eHtml
+
+Set Html = new cHTMLHelper
+Set eHtml = new cExtendedHTMLHelper
+%>

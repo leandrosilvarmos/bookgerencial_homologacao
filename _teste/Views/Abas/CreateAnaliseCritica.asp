@@ -1,0 +1,212 @@
+<% If ViewData.Item("Modulo").GetValue("ANALISE_CRITICA", 0) = "S" Then %>
+<div class="hr-line-dashed"></div>
+<form action="?controller=Abas&action=CreateAnalisePost" id="CreateAnalisePost" method="post" accept-charset="ISO-8859-1">
+    <%
+        vExibiuMes = false
+
+        If Not IsNothing(ViewData.Item("AnaliseCritica")) And i > -1 Then
+            i = (ViewData.Item("AnaliseCritica").Count - 1)
+        Else
+            i = 0
+        End If
+
+        Do
+            Dim vCdAnaliseCritica, vDsAnaliseCritica, vDtCadastro, vUsuarioCad, vDtAprovacao, vUsuarioAprovacao, vAprovacao, vDsAprovacao, vMotivo, vMes, vAno
+
+            If Not IsNothing(ViewData.Item("AnaliseCritica")) And i > -1 Then
+                vCdAnaliseCritica = ViewData.Item("AnaliseCritica").GetValue("CD_ANALISE_CRITICA",i)
+                vDsAnaliseCritica = ViewData.Item("AnaliseCritica").GetValue("DS_ANALISE_CRITICA",i)
+                vDtCadastro       = ViewData.Item("AnaliseCritica").GetValue("DT_CADASTRO",i)
+                vUsuarioCad       = ViewData.Item("AnaliseCritica").GetValue("USUARIO_CAD",i)
+                vDtAprovacao      = ViewData.Item("AnaliseCritica").GetValue("DT_APROVACAO",i)
+                vUsuarioAprovacao = ViewData.Item("AnaliseCritica").GetValue("USUARIO_APR",i)
+                vAprovacao        = ViewData.Item("AnaliseCritica").GetValue("APROVACAO",i)
+                vDsAprovacao      = ViewData.Item("AnaliseCritica").GetValue("DS_APROVACAO",i)
+                vMotivo           = ViewData.Item("AnaliseCritica").GetValue("MOTIVO",i)
+                vMes              = ViewData.Item("AnaliseCritica").GetValue("MES",i)
+                vAno              = ViewData.Item("AnaliseCritica").GetValue("ANO",i)
+            Else
+                vCdAnaliseCritica = ""
+                vDsAnaliseCritica = ""
+                vDtCadastro       = ""
+                vUsuarioCad       = ""
+                vDtAprovacao      = ""
+                vUsuarioAprovacao = ""
+                vAprovacao        = ""
+                vDsAprovacao      = ""
+                vMotivo           = ""
+                vMes              = ""
+                vAno              = ""
+            End If
+    %>
+
+    <div class="row analise" style="margin-bottom: 20px;">
+        <div class="form-group">
+            <label for="AnaliseCritica" class="control-label col-md-3">Análise Crítica (<%=Initcap(MonthName(iif(vMes="",ViewData.Item("Mes"),vMes)))%> / <%=iif(vAno="",ViewData.Item("Ano"),vAno) %>):</label>
+            <div class="col-md-9">
+                <% 
+                   If vMes = "" Or CStr(vMes) = CStr(ViewData.Item("Mes")) Or i = -1 Then
+                        vExibiuMes = true
+                %>
+
+                <% If ViewData.Item("AnalisePendente") And vAprovacao <> "R" And vAprovacao <> "A" And vAprovacao <> "P" Then %>
+                <div class="alert alert-danger">
+                    Existe uma análise rejeitada, <a class="alert-link" href="?controller=Abas&action=CreateMsg&unidade=<%=ViewData.Item("CdUnidade")%>&item=<%=ViewData.Item("Item")%>&ano=<%=ViewData.Item("AnoAnalisePendente")%>&mes=<%=ViewData.Item("MesAnalisePendente")%>&ancora=AnaliseCritica">Clique Aqui</a> para corrigi-la.
+                </div>
+                <% Else %>
+                <textarea id="AnaliseCritica" name="AnaliseCritica" cols="50" rows="5" class="form-control" maxlength="4000" style="background-color: #fff;" <%=iif(vAprovacao = "A" Or ViewData.Item("PermissaoCriar") = False, "readonly", "")%>><%=vDsAnaliseCritica%></textarea>
+                <% End If %>
+
+                <%    
+                      If vAprovacao = "P" And (vMes = "" Or CStr(vMes) = CStr(ViewData.Item("Mes"))) Then  
+                %>
+                <%=Html.Hidden("Aprovacao", "")%>
+                <%=Html.Hidden("Motivo", "")%>
+                <%
+                          If ViewData.Item("PermissaoEditar") Then
+                %>
+                <div class="row" style="text-align: right; margin-top: 20px;">
+                    <div class="col-sm-12">
+                        <button id="btnAprovarAnalise" class="btn btn-outline btn-primary"><i class="fas fa-thumbs-up"></i>&nbsp;Aprovar Análise</button>
+                        <button id="btnRejeitarAnalise" class="btn btn-outline btn-danger"><i class="fas fa-thumbs-down"></i>&nbsp;Rejeitar Análise</button>
+                    </div>
+                </div>
+                <%          
+                          End If
+                      End If
+                %>
+
+                <% Else %>
+                <textarea cols="50" rows="4" class="form-control" style="background-color: #f7f7f7;" readonly><%=vDsAnaliseCritica%></textarea>
+                <% End If %>
+            </div>
+        </div>
+
+        <% 
+            If vCdAnaliseCritica <> "" Then 
+        %>
+        <div class="form-group">
+            <div class="col-md-12" style="text-align: right; padding-top: 10px; color: #333">
+                <strong>Salvo em</strong>&nbsp;<%=vDtCadastro%>&nbsp;<strong>por</strong>&nbsp;<%=vUsuarioCad%>
+            </div>
+        </div>
+        <%
+                If vAprovacao <> "P" Then 
+        %>
+        <div class="form-group apr<%=vAprovacao%>">
+            <div class="col-md-12" style="text-align: right; padding-top: 10px; color: #333; margin-bottom: 15px;">
+                <strong><%=vDsAprovacao%>&nbsp;em</strong>&nbsp;<%=vDtAprovacao%>&nbsp;<strong>por</strong>&nbsp;<%=vUsuarioAprovacao%>
+            </div>
+        </div>
+        <%
+                    If vAprovacao = "R" Then
+        %>
+        <div class="col-md-3">&nbsp;</div>
+        <label class="control-label col-md-2" style="text-align: right; color: #333;">Motivo:</label>
+        <div class="col-md-7">
+            <textarea cols="50" rows="3" class="form-control" style="background-color: #ffffff;" readonly><%=vMotivo%></textarea>
+        </div>
+        <% 
+                    End If
+                Else
+        %>
+        <div class="form-group apr<%=vAprovacao%>">
+            <div class="col-md-12" style="text-align: right; padding-top: 10px; color: #333">
+                <strong>Aprovação pendente</strong>
+            </div>
+        </div>
+        <%
+                End If
+            End If 
+        %>
+    </div>
+    <%
+         If vMes = "" Or CStr(vMes) = CStr(ViewData.Item("Mes")) Then 
+            If vAprovacao <> "A" Then
+    %>
+
+    <%=Html.Hidden("DsAnaliseCriticaSalvo", vDsAnaliseCritica)%>
+    <%=Html.Hidden("CdAnaliseCritica", vCdAnaliseCritica)%>
+    <%=Html.Hidden("CdUnidadeAnalise", ViewData.Item("CdUnidade"))%>
+    <%=Html.Hidden("CdModuloAnalise", ViewData.Item("Item"))%>
+    <%=Html.Hidden("AnoAnalise", ViewData.Item("Ano"))%>
+    <%=Html.Hidden("MesAnalise", ViewData.Item("Mes"))%>
+    <%      End If      
+            If ViewData.Item("PermissaoCriar") Or ViewData.Item("PermissaoEditar") Then 
+    %>
+    <div class="row" style="text-align: right;">
+        <div class="col-sm-12">
+            <% If vCdAnaliseCritica <> "" Then %>
+            <button id="btnHistorico" class="btn btn-success"><i class="fa fa-history"></i>&nbsp;Histórico</button>
+            <% End If %>
+            <% If  vAprovacao <> "A" And ViewData.Item("PermissaoCriar") Then %>
+            <%      If Not ViewData.Item("AnalisePendente") Or vAprovacao = "R" Then %>
+            <button id="btnSalvarAnalise" class="btn btn-primary" type="submit" disabled><i class="fa fa-save"></i>&nbsp;Gravar Análise</button>
+            <%      End If %>
+            <% End If %>
+        </div>
+    </div>
+    <%      End If 
+         End If 
+    %>
+
+    <%
+            Response.Flush
+                
+            i = i - 1
+        Loop While Not vExibiuMes
+    %>
+</form>
+
+<% If ViewData.Item("PermissaoEditar") Then %>
+
+<div id="mdlRejeitarAnalise" class="modal fade">
+    <div class="modal-dialog modal-md">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Reitar Análise Crítica</h4>
+            </div>
+            <div class="modal-body" style="padding-bottom: 10px;">
+                <h3>Descreva o motivo para rejeição da análise:</h3>
+                <div class="hr-line-dashed"></div>
+                <div class="form-group">
+                    <label for="txtMotivoRejeição" class="control-label col-md-1" style="text-align: left; padding-left: 0px; margin-top: 5px; padding-right: 0px;">Motivo</label>
+                    <div class="col-md-10">
+                        <textarea id="txtMotivoRejeicao" name="AnaliseCritica" cols="50" rows="3" class="form-control" maxlength="500" style="background-color: #fff;"></textarea>
+                    </div>
+                </div>
+                <br />
+                <br />
+                <br />
+                <br />
+            </div>
+            <div class="modal-footer" style="border-top-width: 0px">
+                <button id="btnRejeitarAnaliseConfirm" type="button" class="btn btn-danger"><i class="fas fa-thumbs-down"></i>&nbsp;Rejeitar Análise</button>
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancelar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% End If %>
+
+<div id="mdlHistoricoAnalise" class="modal fade">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                <h4 class="modal-title">Histórico Análise Crítica</h4>
+            </div>
+            <div class="modal-body" style="padding-bottom: 10px; background-color: #f5f5f5;">
+                <div class="sk-spinner sk-spinner-pulse"></div>
+            </div>
+            <div class="modal-footer" style="border-top-width: 0px">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fechar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<% End If %>
+

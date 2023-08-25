@@ -1,0 +1,642 @@
+{
+  "titulo": [
+    {
+      "itens": [
+        {
+          "controllerName": "Unidade",
+          "actionName": "Create",
+          "descricao": "Nova Unidade"
+        },
+        {
+          "controllerName": "Unidade",
+          "actionName": "Delete",
+          "descricao": "Excluir Unidade"
+        },
+        {
+          "controllerName": "Unidade",
+          "actionName": "Details",
+          "descricao": "Visualizar Unidade"
+        },
+        {
+          "controllerName": "Unidade",
+          "actionName": "Edit",
+          "descricao": "Editar Unidade"
+        },
+        {
+          "controllerName": "Unidade",
+          "actionName": "List",
+          "descricao": "Unidades"
+        },
+        {
+          "controllerName": "CentroCusto",
+          "actionName": "Create",
+          "descricao": "Novo Centro de Custo"
+        },
+        {
+          "controllerName": "CentroCusto",
+          "actionName": "Delete",
+          "descricao": "Excluir Centro de Custo"
+        },
+        {
+          "controllerName": "CentroCusto",
+          "actionName": "Details",
+          "descricao": "Visualizar Centro de Custo"
+        },
+        {
+          "controllerName": "CentroCusto",
+          "actionName": "Edit",
+          "descricao": "Editar Centro de Custo"
+        },
+        {
+          "controllerName": "CentroCusto",
+          "actionName": "List",
+          "descricao": "Centros de Custo"
+        },
+        {
+          "controllerName": "Modulo",
+          "actionName": "Create",
+          "descricao": "Novo Módulo"
+        },
+        {
+          "controllerName": "Modulo",
+          "actionName": "Delete",
+          "descricao": "Excluir Módulo"
+        },
+        {
+          "controllerName": "Modulo",
+          "actionName": "Details",
+          "descricao": "Visualizar Módulo"
+        },
+        {
+          "controllerName": "Modulo",
+          "actionName": "Edit",
+          "descricao": "Editar Módulo"
+        },
+        {
+          "controllerName": "Modulo",
+          "actionName": "List",
+          "descricao": "Módulos"
+        },
+        {
+          "controllerName": "ItemModulo",
+          "actionName": "Create",
+          "descricao": "Novo Item"
+        },
+        {
+          "controllerName": "ItemModulo",
+          "actionName": "Delete",
+          "descricao": "Excluir Item"
+        },
+        {
+          "controllerName": "ItemModulo",
+          "actionName": "Details",
+          "descricao": "Visualizar Item"
+        },
+        {
+          "controllerName": "ItemModulo",
+          "actionName": "Edit",
+          "descricao": "Editar Item"
+        },
+        {
+          "controllerName": "ItemModulo",
+          "actionName": "List",
+          "descricao": "Itens"
+        },
+        {
+          "controllerName": "ItemModulo",
+          "actionName": "ListMsg",
+          "descricao": "Itens"
+        },
+        {
+          "controllerName": "LogAcesso",
+          "actionName": "List",
+          "descricao": "Log Acessos"
+        },
+        {
+          "controllerName": "LogHistorico",
+          "actionName": "List",
+          "descricao": "Log Históricos"
+        },
+        {
+          "controllerName": "LogExcecao",
+          "actionName": "List",
+          "descricao": "Log Falhas"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "Create",
+          "descricao": "Novo Login"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "CreatePost",
+          "descricao": "Novo Login"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "Delete",
+          "descricao": "Excluir Login"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "Details",
+          "descricao": "Visualizar Login"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "Edit",
+          "descricao": "Editar Login"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "EditPost",
+          "descricao": "Editar Login"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "List",
+          "descricao": "Logins"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "ListMsg",
+          "descricao": "Logins"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "AlterarSenha",
+          "descricao": "Alterar Senha"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "AlterarSenhaMsg",
+          "descricao": "Alterar Senha"
+        },
+        {
+          "controllerName": "Login",
+          "actionName": "AlterarSenhaPost",
+          "descricao": "Alterar Senha"
+        },
+        {
+          "controllerName": "Permissao",
+          "actionName": "Create",
+          "descricao": "Nova Permissão"
+        },
+        {
+          "controllerName": "Permissao",
+          "actionName": "Delete",
+          "descricao": "Excluir Permissão"
+        },
+        {
+          "controllerName": "Permissao",
+          "actionName": "Details",
+          "descricao": "Visualizar Permissão"
+        },
+        {
+          "controllerName": "Permissao",
+          "actionName": "Edit",
+          "descricao": "Editar Permissão"
+        },
+        {
+          "controllerName": "Permissao",
+          "actionName": "List",
+          "descricao": "Permissões"
+        },
+        {
+          "controllerName": "Permissao",
+          "actionName": "ListMsg",
+          "descricao": "Permissões"
+        },
+        {
+          "controllerName": "GrupoPermissao",
+          "actionName": "Create",
+          "descricao": "Novo Grupo de Permissão"
+        },
+        {
+          "controllerName": "GrupoPermissao",
+          "actionName": "Delete",
+          "descricao": "Excluir Grupo de Permissão"
+        },
+        {
+          "controllerName": "GrupoPermissao",
+          "actionName": "Details",
+          "descricao": "Visualizar Grupo de Permissão"
+        },
+        {
+          "controllerName": "GrupoPermissao",
+          "actionName": "Edit",
+          "descricao": "Editar Grupo de Permissão"
+        },
+        {
+          "controllerName": "GrupoPermissao",
+          "actionName": "List",
+          "descricao": "Grupos de Permissão"
+        },
+        {
+          "controllerName": "UsrGrupoPerm",
+          "actionName": "Create",
+          "descricao": "Novo Login / Grupo de Permissão"
+        },
+        {
+          "controllerName": "UsrGrupoPerm",
+          "actionName": "Delete",
+          "descricao": "Excluir Login / Grupo de Permissão"
+        },
+        {
+          "controllerName": "UsrGrupoPerm",
+          "actionName": "Details",
+          "descricao": "Visualizar Login / Grupo de Permissão"
+        },
+        {
+          "controllerName": "UsrGrupoPerm",
+          "actionName": "Edit",
+          "descricao": "Editar Login / Grupo de Permissão"
+        },
+        {
+          "controllerName": "UsrGrupoPerm",
+          "actionName": "List",
+          "descricao": "Login / Grupos de Permissão"
+        },
+        {
+          "controllerName": "UsrGrupoPerm",
+          "actionName": "ListMsg",
+          "descricao": "Login / Grupos de Permissão"
+        },
+        {
+          "controllerName": "UsrUnidade",
+          "actionName": "Create",
+          "descricao": "Novo Login / Unidade"
+        },
+        {
+          "controllerName": "UsrUnidade",
+          "actionName": "Delete",
+          "descricao": "Excluir Login / Unidade"
+        },
+        {
+          "controllerName": "UsrUnidade",
+          "actionName": "Details",
+          "descricao": "Visualizar Login / Unidade"
+        },
+        {
+          "controllerName": "UsrUnidade",
+          "actionName": "Edit",
+          "descricao": "Editar Login / Unidade"
+        },
+        {
+          "controllerName": "UsrUnidade",
+          "actionName": "List",
+          "descricao": "Login / Unidade"
+        },
+        {
+          "controllerName": "UsrUnidade",
+          "actionName": "ListMsg",
+          "descricao": "Login / Unidade"
+        },
+        {
+          "controllerName": "UsrCenCust",
+          "actionName": "Create",
+          "descricao": "Novo Login / Centro Custo"
+        },
+        {
+          "controllerName": "UsrCenCust",
+          "actionName": "Delete",
+          "descricao": "Excluir Login / Centro Custo"
+        },
+        {
+          "controllerName": "UsrCenCust",
+          "actionName": "Details",
+          "descricao": "Visualizar Login / Centro Custo"
+        },
+        {
+          "controllerName": "UsrCenCust",
+          "actionName": "Edit",
+          "descricao": "Editar Login / Centro Custo"
+        },
+        {
+          "controllerName": "UsrCenCust",
+          "actionName": "List",
+          "descricao": "Login / Centro Custo"
+        },
+        {
+          "controllerName": "UsrCenCust",
+          "actionName": "ListMsg",
+          "descricao": "Login / Centro Custo"
+        }
+      ]
+    }
+  ],
+  "enum": [
+    {
+      "itens": [
+        {
+          "nome": "SituacaoEnum",
+          "valores": [
+            {
+              "descricao": "Ativo",
+              "valor": "A"
+            },
+            {
+              "descricao": "Inativo",
+              "valor": "I"
+            }
+          ]
+        },
+        {
+          "nome": "IeEnum",
+          "valores": [
+            {
+              "descricao": "Sim",
+              "valor": "1"
+            },
+            {
+              "descricao": "Não",
+              "valor": "0"
+            }
+          ]
+        },
+        {
+          "nome": "IeCharEnum",
+          "valores": [
+            {
+              "descricao": "ND",
+              "valor": ""
+            },
+            {
+              "descricao": "Sim",
+              "valor": "S"
+            },
+            {
+              "descricao": "Não",
+              "valor": "N"
+            }
+          ]
+        },
+        {
+          "nome": "TipoItemEnum",
+          "valores": [
+            {
+              "descricao": "Item",
+              "valor": "I"
+            },
+            {
+              "descricao": "Subgrupo",
+              "valor": "S"
+            },
+            {
+              "descricao": "Grupo",
+              "valor": "G"
+            }
+          ]
+        },
+        {
+          "nome": "FuncaoItemEnum",
+          "valores": [
+            {
+              "descricao": "ND",
+              "valor": ""
+            },
+            {
+              "descricao": "Soma",
+              "valor": "S"
+            },
+            {
+              "descricao": "Média",
+              "valor": "M"
+            }
+          ]
+        },
+        {
+          "nome": "FormatacaoItemEnum",
+          "valores": [
+            {
+              "descricao": "ND",
+              "valor": ""
+            },
+            {
+              "descricao": "Número",
+              "valor": "N"
+            },
+            {
+              "descricao": "Decimal",
+              "valor": "D"
+            },
+            {
+              "descricao": "Moeda",
+              "valor": "M"
+            },
+            {
+              "descricao": "Porcentagem",
+              "valor": "P"
+            },
+            {
+              "descricao": "Texto",
+              "valor": "T"
+            },
+            {
+              "descricao": "Hora",
+              "valor": "H"
+            }
+          ]
+        },
+        {
+          "nome": "StatusLogAcessoEnum",
+          "valores": [
+            {
+              "descricao": "Acesso Liberado",
+              "valor": "A"
+            },
+            {
+              "descricao": "Acessso Bloqueado",
+              "valor": "B"
+            }
+          ]
+        },
+        {
+          "nome": "OrigemDadosEnum",
+          "valores": [
+            {
+              "descricao": "ND",
+              "valor": ""
+            },
+            {
+              "descricao": "Automático",
+              "valor": "A"
+            },
+            {
+              "descricao": "Manual",
+              "valor": "M"
+            }
+          ]
+        },
+        {
+          "nome": "CertificadosEnum",
+          "valores": [
+            {
+              "descricao": "ONA III",
+              "valor": "certONA_III"
+            },
+            {
+              "descricao": "Qmentum Diamante",
+              "valor": "certQmentumDiamante"
+            }
+          ]
+        },
+        {
+          "nome": "FrequenciaEnum",
+          "valores": [
+            {
+              "descricao": "Mensal",
+              "valor": 1
+            },
+            {
+              "descricao": "Bimestral",
+              "valor": 2
+            },
+            {
+              "descricao": "Trimestral",
+              "valor": 3
+            },
+            {
+              "descricao": "Quadrimestral",
+              "valor": 4
+            },
+            {
+              "descricao": "Semestral",
+              "valor": 6
+            },
+            {
+              "descricao": "Anual",
+              "valor": 12
+            }
+          ]
+        },
+        {
+          "nome": "NmFrequenciaEnum",
+          "valores": [
+            {
+              "descricao": "Bimestre",
+              "valor": 2
+            },
+            {
+              "descricao": "Trimestre",
+              "valor": 3
+            },
+            {
+              "descricao": "Quadrimestre",
+              "valor": 4
+            },
+            {
+              "descricao": "Semestre",
+              "valor": 6
+            }
+          ]
+        },
+        {
+          "nome": "MetaEnum",
+          "valores": [
+            {
+              "descricao": ">",
+              "valor": 1
+            },
+            {
+              "descricao": "<",
+              "valor": 2
+            },
+            {
+              "descricao": "&#8805;",
+              "valor": 3
+            },
+            {
+              "descricao": "&#8804;",
+              "valor": 4
+            }
+          ]
+        },
+        {
+          "nome": "DsMetaEnum",
+          "valores": [
+            {
+              "descricao": ">",
+              "valor": 1
+            },
+            {
+              "descricao": "<",
+              "valor": 2
+            },
+            {
+              "descricao": ">=",
+              "valor": 3
+            },
+            {
+              "descricao": "<=",
+              "valor": 4
+            }
+          ]
+        },
+        {
+          "nome": "EstiloItemEnum",
+          "valores": [
+            {
+              "descricao": "Texto em Negrito",
+              "valor": "stlN"
+            },
+            {
+              "descricao": "Quebra de linha",
+              "valor": "stlSeparadorTop"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "mensagem": [
+    {
+      "itens": [
+        {
+          "id": "msgConfDelete",
+          "descricao": "Deseja realmente excluir este cadastro?"
+        },
+        {
+          "id": "msgLoginEmpty",
+          "descricao": "Informe o login e a senha!"
+        },
+        {
+          "id": "msgLoginSenhaEmpty",
+          "descricao": "Informe a senha e a confirmação de senha!"
+        },
+        {
+          "id": "msgLoginSenhaDiferente",
+          "descricao": "A senha e a confirmação devem ser iguais!"
+        },
+        {
+          "id": "msgLoginSenhaSucesso",
+          "descricao": "Senha alterada com sucesso!"
+        },
+        {
+          "id": "msgLoginExistente",
+          "descricao": "Login já cadastrado!"
+        },
+        {
+          "id": "msgLoginInvalido",
+          "descricao": "Login e/ou senha inválido(s)!"
+        },
+        {
+          "id": "msgLoginInativo",
+          "descricao": "Cadastro de usuário inativo!"
+        },
+        {
+          "id": "msgLoginTipoInvalido",
+          "descricao": "Tipo de usuário inválido!"
+        },
+        {
+          "id": "msgLoginSucesso",
+          "descricao": "Login realizado com sucesso!"
+        },
+        {
+          "id": "msgErro500",
+          "descricao": "Ocorreu um erro interno na aplicação!"
+        }
+      ]
+    }
+  ]
+}

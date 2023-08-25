@@ -1,0 +1,752 @@
+<%
+    Dim vWidth
+
+    vWidth = 200
+
+    If Not IsNothing(Model) Then
+        If Model.GetMaxValue("NM_ITEM_LENGTH") < 20 Then
+            vWidth = 200
+        Else
+            vWidth = (Model.GetMaxValue("NM_ITEM_LENGTH") * 7.5) + (Model.GetMaxValue("NIVEL") * 8)
+        End If
+
+        If vWidth > 500 Then
+            vWidth = 500
+        ElseIf vWidth < 200 Then
+            vWidth = 200
+        End If
+    End If
+
+    vWidth = Replace(CStr(vWidth),",",".")
+%>
+
+<tr class="jqgfirstrow" role="row" style="height: auto">
+    <td role="gridcell" style="height: 0px; width: <%=vWidth%>px"></td>
+    <% If vFrequencia Then %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% End If %>
+    <% If vMeta Then %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% End If %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% If vTotalAnual Or vMediaAnual Then %>
+    <td role="gridcell" style="height: 0px; width: 65px;"></td>
+    <% End If %>
+    <% If vTotalAnual Then %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% End If %>
+    <% If vMediaAnual Then %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% End If %>
+    <% If vAvAnual Then %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% End If %>
+
+    <% 'Valores ano anterior %>
+    <% If vTotalAnual Or vMediaAnual Then %>
+    <td role="gridcell" style="height: 0px; width: 65px;"></td>
+    <% End If %>
+
+    <% If vTotalAnual Then %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% End If %>
+
+    <% If vMediaAnual Then %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% End If %>
+    <% If vAvAnual Then %>
+    <td role="gridcell" style="height: 0px; width: 130px;"></td>
+    <% End If %>
+</tr>
+
+<%
+
+
+If Not IsNothing(Model) Then
+    Dim vTempCdGrupo, vTempCdSubgrupo, vZebra, vAnoAtual, vAnoAnterior
+
+    vTempCdGrupo    = ""
+    vTempCdSubgrupo = ""
+    vZebra          = "odd"
+
+    vAnoAtual    = ViewData.Item("Ano")
+    vAnoAnterior = vAnoAtual -1
+    
+    For i = 0 To (Model.Count - 1) Step 1
+        If Model.GetValue("IS_ITEM",i) = "S" Then
+            Dim vNivel, vCdItem, vNmItem, vDsItem, vTipo, vFuncao, vFormatacao, vFormula, vCdItemSuperior, vQtdCasasDecimais, vEstilo, vOcultarNulo, vTrimestral, vAH, vExibirTotal, vFrequenciaValor, vMetaComparacao, vMetaValor, vMetaComplemento
+
+            Dim vJan, vFev, vMar, vAbr, vMai, vJun, vJul, vAgo, vSet, vOut, vNov, vDez, v1Trimestre, v2Trimestre, v3Trimestre, v4Trimestre
+
+            Dim vSub, vExibir, vTotal, vMedia, vQtdColunas, vTotalAnoAnterior, vTotalAnoAntParc, vComparacaoAnual, vQtdMeses, vTotalGrpAnoAnterior, vTotalGrpAnoAntParc, vTotalGrpAnoAtual, vQtdMesAnoAnterior, vQtdMesAnoAntParc, vQtdMesAnoAtual, vCdItemRaiz
+        
+            vNivel               = Model.GetValue("NIVEL",i)
+            vCdItem              = Model.GetValue("CD_ITEM",i)
+            vNmItem              = Model.GetValue("NM_ITEM",i)
+            vDsItem              = Model.GetValue("DS_ITEM",i)
+            vTipo                = Model.GetValue("TIPO",i)
+            vFuncao              = Model.GetValue("FUNCAO",i)
+            vFormatacao          = Model.GetValue("FORMATACAO",i)
+            vFormula             = Model.GetValue("FORMULA",i)
+            vCdItemSuperior      = Model.GetValue("CD_ITEM_SUPERIOR",i)
+            vQtdCasasDecimais    = Model.GetValue("QTD_CASAS_DECIMAIS",i)
+            vEstilo              = Model.GetValue("ESTILO",i)
+            vOcultarNulo         = Model.GetValue("OCULTAR_NULO",i)
+            vTrimestral          = Model.GetValue("TRIMESTRAL",i)
+            vAH                  = Model.GetValue("AH",i)
+            vExibirTotal         = CStr(iif(IsNothing(Model.GetValue("EXIBIR_TOTAL",i)), "S", Model.GetValue("EXIBIR_TOTAL",i)))
+            vFrequenciaValor     = Model.GetValue("FREQUENCIA",i)
+            vMetaComparacao      = Model.GetValue("META_COMPARACAO",i)
+            vMetaValor           = Model.GetValue("META_VALOR",i)
+            vMetaComplemento     = Model.GetValue("META_COMPLEMENTO",i)
+            vExibir              = True
+            vQtdColunas          = 13
+            vTotal               = 0
+            vMedia               = 0
+
+            vTotalAnoAnterior    = 0
+            vTotalAnoAntParc     = 0
+            vMediaAnoAnterior    = 0
+            vMediaAnoAntParc     = 0
+            vComparacaoAnual     = 0
+            vComparacaoAnualParc = 0
+
+            vTotalGrpAnoAnterior = Model.GetValue("TOTAL_GRUPO_ANO_ANTERIOR",i)
+            vTotalGrpAnoAntParc  = Model.GetValue("TOTAL_GRUPO_ANO_ANT_PARC",i)
+            vTotalGrpAnoAtual    = Model.GetValue("TOTAL_GRUPO_ANO_ATUAL",i)
+            vQtdMesAnoAnterior   = Model.GetValue("QTD_MES_ANO_ANTERIOR",i)
+            vQtdMesAnoAntParc    = Model.GetValue("QTD_MES_ANO_ANT_PARC",i)
+            vQtdMesAnoAtual      = Model.GetValue("QTD_MES_ANO_ATUAL",i)
+            vCdItemRaiz          = Model.GetValue("CD_ITEM_RAIZ",i)
+
+            If vTipo = "G" Or vTipo = "S" Then
+                If VerificarConjuntoVazio(vCdItem, i) Then
+                    vExibir = False
+                End If
+            End If
+
+            If vExibir Then
+                vJan = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("JAN",i), vFormatacao, vFormula, "JAN", i, vQtdCasasDecimais), Model.GetValue("JAN_TXT",i))
+                vFev = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("FEV",i), vFormatacao, vFormula, "FEV", i, vQtdCasasDecimais), Model.GetValue("FEV_TXT",i))
+                vMar = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("MAR",i), vFormatacao, vFormula, "MAR", i, vQtdCasasDecimais), Model.GetValue("MAR_TXT",i))
+                vAbr = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("ABR",i), vFormatacao, vFormula, "ABR", i, vQtdCasasDecimais), Model.GetValue("ABR_TXT",i))
+                vMai = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("MAI",i), vFormatacao, vFormula, "MAI", i, vQtdCasasDecimais), Model.GetValue("MAI_TXT",i))
+                vJun = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("JUN",i), vFormatacao, vFormula, "JUN", i, vQtdCasasDecimais), Model.GetValue("JUN_TXT",i))
+                vJul = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("JUL",i), vFormatacao, vFormula, "JUL", i, vQtdCasasDecimais), Model.GetValue("JUL_TXT",i))
+                vAgo = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("AGO",i), vFormatacao, vFormula, "AGO", i, vQtdCasasDecimais), Model.GetValue("AGO_TXT",i))
+                vSet = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("SET",i), vFormatacao, vFormula, "SET", i, vQtdCasasDecimais), Model.GetValue("SET_TXT",i))
+                vOut = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("OUT",i), vFormatacao, vFormula, "OUT", i, vQtdCasasDecimais), Model.GetValue("OUT_TXT",i))
+                vNov = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("NOV",i), vFormatacao, vFormula, "NOV", i, vQtdCasasDecimais), Model.GetValue("NOV_TXT",i))
+                vDez = iif(vFormatacao <> "T", FormatarValor(Model.GetValue("DEZ",i), vFormatacao, vFormula, "DEZ", i, vQtdCasasDecimais), Model.GetValue("DEZ_TXT",i))
+                
+                vMetaValor = FormatarValor(vMetaValor, vFormatacao, vFormula, "META_VALOR", i, vQtdCasasDecimais)
+                
+                vTotal = FormatarValor(Model.GetValue("TOTAL_ANO_ATUAL",i), vFormatacao, vFormula, "TOTAL_ANO_ATUAL", i, vQtdCasasDecimais)
+                vTotalAnoAnterior = FormatarValor(Model.GetValue("TOTAL_ANO_ANTERIOR",i), vFormatacao, vFormula, "TOTAL_ANO_ANTERIOR", i, vQtdCasasDecimais)
+                vTotalAnoAntParc = FormatarValor(Model.GetValue("TOTAL_ANO_ANT_PARC",i), vFormatacao, vFormula, "TOTAL_ANO_ANT_PARC", i, vQtdCasasDecimais)
+        
+
+                If vJan = "-" And vFev = "-" And vMar = "-" And vAbr = "-" And vMai = "-" And vJun = "-" And vJul = "-" And vAgo = "-" And vSet = "-" And vOut = "-" And vNov = "-" And vDez = "-" And (vFuncao <> "" Or vFormula <> "") And vTipo = "I" Then
+                    vExibir = False
+                End If
+
+                If vExibir Then
+                    vSub = ""
+            
+                    For Each vCdSub In Split(Model.GetValue("PATH_CD_ITEM",i),";")
+                        If vCdSub <> "" And vCdSub <> CStr(vCdItem) Then
+                            vSub = vSub & " sub" & vCdSub
+                        End If
+                    Next
+
+                    If instr(vEstilo, "stlSeparadorTop") > 0 Then
+                        If vTotalAnual Or vMediaAnual Then vQtdColunas = vQtdColunas + 1 End If
+                        If vTotalAnual Then vQtdColunas = vQtdColunas + 1 End If
+                        If vMediaAnual Then vQtdColunas = vQtdColunas + 1 End If
+                        If vAvAnual Then    vQtdColunas = vQtdColunas + 1 End If
+
+                        '----- Valores ano anterior -----
+                        If vTotalAnual Or vMediaAnual Then vQtdColunas = vQtdColunas + 1 End If
+                        If vTotalAnual Then vQtdColunas = vQtdColunas + 1 End If
+                        If vMediaAnual Then vQtdColunas = vQtdColunas + 2 End If
+                        If vAvAnual Then    vQtdColunas = vQtdColunas + 1 End If
+
+                        If vFrequencia Then vQtdColunas = vQtdColunas + 1 End If
+                        If vMeta Then       vQtdColunas = vQtdColunas + 1 End If
+%>
+<tr role="row" class="separador ui-widget-content jqgrow ui-row-ltr">
+    <!--td role="gridcell" colspan="<%=vQtdColunas%>"></td>-->
+    <td role="gridcell" style="border: none;"></td>
+</tr>
+<%
+                    End If
+
+                    If Not IsNothing(vTrimestral) Then
+                        Dim vStrTrimestre
+
+                        v1Trimestre = 0
+                        v2Trimestre = 0
+                        v3Trimestre = 0
+                        v4Trimestre = 0
+                        vStrTrimestre = "TOTAL"
+
+                        If IsNumeric(vJan) Then v1Trimestre = v1Trimestre + vJan End If
+                        If IsNumeric(vFev) Then v1Trimestre = v1Trimestre + vFev End If
+                        If IsNumeric(vMar) Then v1Trimestre = v1Trimestre + vMar End If
+                        If IsNumeric(vAbr) Then v2Trimestre = v2Trimestre + vAbr End If
+                        If IsNumeric(vMai) Then v2Trimestre = v2Trimestre + vMai End If
+                        If IsNumeric(vJun) Then v2Trimestre = v2Trimestre + vJun End If
+                        If IsNumeric(vJul) Then v3Trimestre = v3Trimestre + vJul End If
+                        If IsNumeric(vAgo) Then v3Trimestre = v3Trimestre + vAgo End If
+                        If IsNumeric(vSet) Then v3Trimestre = v3Trimestre + vSet End If
+                        If IsNumeric(vOut) Then v4Trimestre = v4Trimestre + vOut End If
+                        If IsNumeric(vNov) Then v4Trimestre = v4Trimestre + vNov End If
+                        If IsNumeric(vDez) Then v4Trimestre = v4Trimestre + vDez End If
+
+                        If vTrimestral = "M" Then '--M - Média
+                            vStrTrimestre = "MÉDIA"
+                            If IsNumeric(v1Trimestre) Then If v1Trimestre <> 0 Then v1Trimestre = v1Trimestre / 3 End If End If
+                            If IsNumeric(v2Trimestre) Then If v2Trimestre <> 0 Then v2Trimestre = v2Trimestre / 3 End If End If
+                            If IsNumeric(v3Trimestre) Then If v3Trimestre <> 0 Then v3Trimestre = v3Trimestre / 3 End If End If 
+                            If IsNumeric(v4Trimestre) Then If v4Trimestre <> 0 Then v4Trimestre = v4Trimestre / 3 End If End If
+                        End If
+
+                        If vJan = "-" And vFev = "-" And vMar = "-" Then
+                            v1Trimestre = "-"
+                        Else
+                            v1Trimestre = FormatarValor(v1Trimestre, vFormatacao, null, null, i, vQtdCasasDecimais)
+                        End If
+
+                        If vAbr = "-" And vMai = "-" And vJun = "-" Then
+                            v2Trimestre = "-"
+                        Else
+                            v2Trimestre = FormatarValor(v2Trimestre, vFormatacao, null, null, i, vQtdCasasDecimais)
+                        End If
+
+                        If vJul = "-" And vAgo = "-" And vSet = "-" Then
+                            v3Trimestre = "-"
+                        Else
+                            v3Trimestre = FormatarValor(v3Trimestre, vFormatacao, null, null, i, vQtdCasasDecimais)
+                        End If
+
+                        If vOut = "-" And vNov = "-" And vDez = "-" Then
+                            v4Trimestre = "-"
+                        Else
+                            v4Trimestre = FormatarValor(v4Trimestre, vFormatacao, null, null, i, vQtdCasasDecimais)
+                        End If
+%>
+<tr role="row" class="trimestre ui-widget-content jqgrow ui-row-ltr">
+    <td role="gridcell"></td>
+    <%
+    If vFrequencia Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vMeta Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <td role="gridcell" colspan="3"><span title="<%=vNmItem%> (<%=vStrTrimestre%> 1º TRI): <%=v1Trimestre%>"><%=v1Trimestre%></span></td>
+    <td role="gridcell" colspan="3"><span title="<%=vNmItem%> (<%=vStrTrimestre%> 2º TRI): <%=v2Trimestre%>"><%=v2Trimestre%></span></td>
+    <td role="gridcell" colspan="3"><span title="<%=vNmItem%> (<%=vStrTrimestre%> 3º TRI): <%=v3Trimestre%>"><%=v3Trimestre%></span></td>
+    <td role="gridcell" colspan="3"><span title="<%=vNmItem%> (<%=vStrTrimestre%> 4º TRI): <%=v4Trimestre%>"><%=v4Trimestre%></span></td>
+    <%
+    If vTotalAnual Or vMediaAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vTotalAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vMediaAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vAvAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+
+    <%
+    ' --------- Valores ano anterior ---------
+
+    If vTotalAnual Or vMediaAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vTotalAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vMediaAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vAvAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+</tr>
+<%
+                    End If
+%>
+<tr role="row" class="nvl<%=vNivel%> tp<%=vTipo%> <%=vSub%> <%=vEstilo%> <%=iif(vTipo = "S" And vOverFlowSubItem,"OverFlowSubItem","") %> ui-widget-content jqgrow ui-row-ltr">
+    <td role="gridcell" class="ativo" data-value="<%=vCdItem%>"><%=vNmItem%><%=iif((Not IsNothing(vDsItem)) or 1=1, "<span style='float: right; color: #7d8081; cursor: help; display: none;' class='fas fa-lg fa-info-circle' title='"&vDsItem&"'></span>", "")%></td>
+    <%
+    If vFrequencia Then
+    %>
+    <td role="gridcell" class="tdFrequencia"><% If vTipo = "I" Then Response.Write Texts.EnumDescricao("FrequenciaEnum", vFrequenciaValor) End If %></td>
+    <%
+    End If
+    %>
+    <%
+    If vMeta Then
+    %>
+    <td role="gridcell" class="tdMeta"><% If vTipo = "I" Then Response.Write Texts.EnumDescricao("MetaEnum", vMetaComparacao) & " " & vMetaValor & " " & vMetaComplemento End If %></td>
+    <%
+    End If
+    %>
+
+    <% 
+        ExibirValor vTipo, vMeta, vJan, 1, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vFev, 2, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vMar, 3, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vAbr, 4, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vMai, 5, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vJun, 6, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vJul, 7, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vAgo, 8, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vSet, 9, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vOut, 10, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vNov, 11, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+        ExibirValor vTipo, vMeta, vDez, 12, vAnoAtual, vNmItem, vMetaComparacao, vMetaValor, vFrequencia, vFrequenciaValor
+    %>
+
+    <%
+    If vTotalAnual Or vMediaAnual Then
+        If Not IsNothing(vJan) Then vJan = Replace(vJan,"%","") End If
+        If Not IsNothing(vFev) Then vFev = Replace(vFev,"%","") End If
+        If Not IsNothing(vMar) Then vMar = Replace(vMar,"%","") End If
+        If Not IsNothing(vAbr) Then vAbr = Replace(vAbr,"%","") End If
+        If Not IsNothing(vMai) Then vMai = Replace(vMai,"%","") End If
+        If Not IsNothing(vJun) Then vJun = Replace(vJun,"%","") End If
+        If Not IsNothing(vJul) Then vJul = Replace(vJul,"%","") End If
+        If Not IsNothing(vAgo) Then vAgo = Replace(vAgo,"%","") End If
+        If Not IsNothing(vSet) Then vSet = Replace(vSet,"%","") End If
+        If Not IsNothing(vOut) Then vOut = Replace(vOut,"%","") End If
+        If Not IsNothing(vNov) Then vNov = Replace(vNov,"%","") End If
+        If Not IsNothing(vDez) Then vDez = Replace(vDez,"%","") End If
+
+        vQtdMeses = 0
+
+        If IsNumeric(Replace(Nvl(vJan,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vFev,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vMar,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vAbr,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vMai,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vJun,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vJul,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vAgo,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vSet,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vOut,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vNov,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+        If IsNumeric(Replace(Nvl(vDez,"-"),"%","")) Then vQtdMeses = vQtdMeses + 1 End If
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vTotalAnual Then
+        If IsNothing(vFormatacao) Or vFormatacao = "" Or vFormatacao = "T" Then
+    %>
+    <td role="gridcell" class="tdAnual">&nbsp;</td>
+    <%
+        Else
+            If vExibirTotal <> "N" Then
+    %>
+    <td role="gridcell" class="tdAnual"><span title="<%=vNmItem%> (TOTAL <%=vAnoAtual%>): <%=vTotal%>"><%=vTotal%></span></td>
+    <%
+            Else
+    %>
+    <td role="gridcell" class="tdAnual">-</td>
+    <%
+            End If
+        End If
+    End If
+
+    If Not IsNothing(vTotal) Then vTotal = Replace(vTotal,"%","") End If
+    %>
+
+    <%
+    If vMediaAnual Then
+        If IsNothing(vFormatacao) Or vFormatacao = "" Or vFormatacao = "T" Then
+    %>
+    <td role="gridcell" class="tdMedia">&nbsp;</td>
+    <%
+        Else
+            If vExibirTotal <> "N" Then
+                vMedia = 0
+
+                If IsNumeric(vTotal) Then If vTotal <> 0 And iif(vQtdMesAnoAtual=0,vQtdMeses,vQtdMesAnoAtual) > 0 Then vMedia = vTotal / iif(vQtdMesAnoAtual=0,vQtdMeses,vQtdMesAnoAtual) End If End If
+
+                vMedia = FormatarValor(vMedia, vFormatacao, null, null, i, vQtdCasasDecimais)
+    %>
+    <td role="gridcell" class="tdMedia"><span title="<%=vNmItem%> (MÉDIA <%=vAnoAtual%>): <%=vMedia%>"><%=vMedia%></span></td>
+    <%
+                If Not IsNothing(vMedia) Then vMedia = Replace(vMedia,"%","") End If
+            Else
+    %>
+    <td role="gridcell" class="tdMedia">-</td>
+    <%
+            End If
+        End If
+    End If
+    %>
+
+    <% If vAvAnual Then
+            If vExibirTotal <> "N" Then
+                Dim vAvAtual
+
+                vAvAtual = iif(vTipo <> "G", "-", "")
+
+                If IsNumeric(vMedia) And vCdItemRaiz <> vGrpAvExcecao And vCdItemRaiz <> "" Then 
+                    If vMedia <> 0 And vTotalGrpAnoAtual <> 0 And vQtdMesAnoAtual <> 0 Then 
+                        vAvAtual = (vMedia / (vTotalGrpAnoAtual / vQtdMesAnoAtual)) * 100
+                    End If 
+                End If
+
+                If IsNumeric(vAvAtual) Then
+                    vAvAtual = FormatNumber(vAvAtual, 2) & "%"
+                End If
+    %>
+    <td role="gridcell" class="tdAv"><span title="<%=vNmItem%> (A.V. <%=vAnoAtual%>): <%=vAvAtual%>"><%=vAvAtual%></span></td>
+    <%      Else %>
+    <td role="gridcell" class="tdAv">-</td>
+    <%      End If
+       End If %>
+
+    <% 
+       '------------------------------------------------------------------------
+       '                       VALORES ANO ANTERIOR 
+       '------------------------------------------------------------------------
+    %>
+
+    <% If vTotalAnual Or vMediaAnual Then %>
+    <td role="gridcell">&nbsp;</td>
+    <% End If %>
+
+
+    <%
+    If vTotalAnual Then
+        If IsNothing(vFormatacao) Or vFormatacao = "" Or vFormatacao = "T" Then
+    %>
+    <td role="gridcell" class="tdAnualAnoAnterior">&nbsp;</td>
+    <%
+        Else
+            If vExibirTotal <> "N" Then
+    %>
+    <td role="gridcell" class="tdAnualAnoAnterior"><span title="<%=vNmItem%> (TOTAL <%=vAnoAnterior%>): <%=vTotalAnoAnterior%>"><%=vTotalAnoAnterior%></span></td>
+    <%
+            Else
+    %>
+    <td role="gridcell" class="tdAnualAnoAnterior">-</td>
+    <%
+            End If
+        End If
+    End If
+    %>
+
+    <%
+    If vMediaAnual Then
+        If Not IsNothing(vTotalAnoAnterior) Then vTotalAnoAnterior = Replace(vTotalAnoAnterior,"%","") End If
+        If Not IsNothing(vTotalAnoAntParc) Then vTotalAnoAntParc = Replace(vTotalAnoAntParc,"%","") End If
+
+        If IsNothing(vFormatacao) Or vFormatacao = "" Or vFormatacao = "T" Then
+    %>
+    <td role="gridcell" class="tdMediaAnoAnterior">&nbsp;</td>
+    <td role="gridcell" class="tdComparacaoAnos">&nbsp;</td>
+    <%
+        Else
+            If vExibirTotal <> "N" Then
+                vMediaAnoAnterior = 0
+                vMediaAnoAntParc = 0
+                vComparacaoAnual = "-"
+                vComparacaoAnualParc = "-"
+
+                If IsNumeric(vTotalAnoAnterior) Then If vTotalAnoAnterior <> 0 Then vMediaAnoAnterior = vTotalAnoAnterior / 12 End If End If
+                If IsNumeric(vTotalAnoAntParc) Then If vTotalAnoAntParc <> 0 And Nvl(vQtdMesAnoAntParc,0) <> 0 Then vMediaAnoAntParc = vTotalAnoAntParc / vQtdMesAnoAntParc End If End If
+
+                vMediaAnoAnterior = FormatarValor(vMediaAnoAnterior, vFormatacao, null, null, i, vQtdCasasDecimais)
+                vMediaAnoAntParc = FormatarValor(vMediaAnoAntParc, vFormatacao, null, null, i, vQtdCasasDecimais)
+    %>
+    <% If vMediaAnualParc Then %>
+    <td role="gridcell" class="tdMediaAnoAnterior"><span title="<%=vNmItem%> (MÉDIA <%=vAnoAnterior%>): <%=vMediaAnoAntParc%>"><%=vMediaAnoAntParc%></span></td>
+    <% Else %>
+    <td role="gridcell" class="tdMediaAnoAnterior"><span title="<%=vNmItem%> (MÉDIA <%=vAnoAnterior%>): <%=vMediaAnoAnterior%>"><%=vMediaAnoAnterior%></span></td>
+    <% End If %>
+    <%
+                If Not IsNothing(vMediaAnoAnterior) Then vMediaAnoAnterior = Replace(vMediaAnoAnterior,"%","") End If
+                If Not IsNothing(vMediaAnoAntParc) Then vMediaAnoAntParc = Replace(vMediaAnoAntParc,"%","") End If
+
+                If IsNumeric(vMedia) And IsNumeric(vMediaAnoAnterior) Then
+                    If vMedia <> 0 And vMediaAnoAnterior <> 0 Then
+                        vComparacaoAnual = ((vMedia / vMediaAnoAnterior) - 1) * 100
+
+                        vComparacaoAnual = FormatNumber(vComparacaoAnual, 2) & iif(vFormatacao = "P"," p.p","%")
+                    End If
+                End If
+
+                If IsNumeric(vMedia) And IsNumeric(vMediaAnoAntParc) Then
+                    If vMedia <> 0 And vMediaAnoAntParc <> 0 Then
+                        vComparacaoAnualParc = ((vMedia / vMediaAnoAntParc) - 1) * 100
+
+                        vComparacaoAnualParc = FormatNumber(vComparacaoAnualParc, 2) & iif(vFormatacao = "P"," p.p","%")
+                    End If
+                End If
+    %>
+    <% If vMediaAnualParc Then %>
+    <td role="gridcell" class="tdComparacaoAnos"><span title="<%=vNmItem%> (<%=vAnoAtual & " x " & vAnoAnterior%>): <%=vComparacaoAnualParc%>"><%=vComparacaoAnualParc%></span></td>
+    <% Else %>
+    <td role="gridcell" class="tdComparacaoAnos"><span title="<%=vNmItem%> (<%=vAnoAtual & " x " & vAnoAnterior%>): <%=vComparacaoAnual%>"><%=vComparacaoAnual%></span></td>
+    <% End If %>
+    <%
+            Else
+    %>
+    <td role="gridcell" class="tdMediaAnoAnterior">-</td>
+    <td role="gridcell" class="tdComparacaoAnos">-</td>
+    <%
+            End If
+        End If
+    End If
+    %>
+
+    <% If vAvAnual Then
+            Dim vAvAnterior, vAvAntParc
+
+            vAvAnterior = iif(vTipo <> "G", "-", "")
+            vAvAntParc = iif(vTipo <> "G", "-", "")
+
+            If IsNumeric(vMediaAnoAnterior) And vCdItemRaiz <> vGrpAvExcecao And vCdItemRaiz <> "" Then 
+                If vMediaAnoAnterior <> 0 And vTotalGrpAnoAnterior <> 0 And vQtdMesAnoAnterior <> 0 Then 
+                    vAvAnterior = (vMediaAnoAnterior / (vTotalGrpAnoAnterior / vQtdMesAnoAnterior)) * 100
+                End If 
+            End If
+
+            If IsNumeric(vMediaAnoAntParc) And vCdItemRaiz <> vGrpAvExcecao And vCdItemRaiz <> "" Then 
+                If vMediaAnoAntParc <> 0 And vTotalGrpAnoAntParc <> 0 And vQtdMesAnoAntParc <> 0 Then 
+                    vAvAntParc = (vMediaAnoAntParc / (vTotalGrpAnoAntParc / vQtdMesAnoAntParc)) * 100
+                End If 
+            End If
+
+            If IsNumeric(vAvAnterior) Then
+                vAvAnterior = FormatNumber(vAvAnterior, 2) & "%"
+            End If
+
+            If IsNumeric(vAvAntParc) Then
+                vAvAntParc = FormatNumber(vAvAntParc, 2) & "%"
+            End If
+    %>
+    <% If vMediaAnualParc Then %>
+    <td role="gridcell" class="tdAv"><span title="<%=vNmItem%> (A.V. <%=vAnoAnterior%>): <%=vAvAntParc%>"><%=vAvAntParc%></span></td>
+    <% Else %>
+    <td role="gridcell" class="tdAv"><span title="<%=vNmItem%> (A.V. <%=vAnoAnterior%>): <%=vAvAnterior%>"><%=vAvAnterior%></span></td>
+    <% End If %>
+    <% End If %>
+</tr>
+
+<% 
+    If Not IsNothing(vAH) Then
+        Dim vAHVarFev, vAHVarMar, vAHVarAbr, vAHVarMai, vAHVarJun, vAHVarJul, vAHVarAgo, vAHVarSet, vAHVarOut, vAHVarNov, vAHVarDez
+
+        vAHVarFev = "-"
+        vAHVarMar = "-"
+        vAHVarAbr = "-"
+        vAHVarMai = "-"
+        vAHVarJun = "-"
+        vAHVarJul = "-"
+        vAHVarAgo = "-"
+        vAHVarSet = "-"
+        vAHVarOut = "-"
+        vAHVarNov = "-"
+        vAHVarDez = "-"
+
+        vJan = iif(Replace(Nvl(cStr(vJan),"-"),"%","") = "0", "-", vJan)
+        vFev = iif(Replace(Nvl(cStr(vFev),"-"),"%","") = "0", "-", vFev)
+        vMar = iif(Replace(Nvl(cStr(vMar),"-"),"%","") = "0", "-", vMar)
+        vAbr = iif(Replace(Nvl(cStr(vAbr),"-"),"%","") = "0", "-", vAbr)
+        vMai = iif(Replace(Nvl(cStr(vMai),"-"),"%","") = "0", "-", vMai)
+        vJun = iif(Replace(Nvl(cStr(vJun),"-"),"%","") = "0", "-", vJun)
+        vJul = iif(Replace(Nvl(cStr(vJul),"-"),"%","") = "0", "-", vJul)
+        vAgo = iif(Replace(Nvl(cStr(vAgo),"-"),"%","") = "0", "-", vAgo)
+        vSet = iif(Replace(Nvl(cStr(vSet),"-"),"%","") = "0", "-", vSet)
+        vOut = iif(Replace(Nvl(cStr(vOut),"-"),"%","") = "0", "-", vOut)
+        vNov = iif(Replace(Nvl(cStr(vNov),"-"),"%","") = "0", "-", vNov)
+        vDez = iif(Replace(Nvl(cStr(vDez),"-"),"%","") = "0", "-", vDez)
+
+        If IsNumeric(Replace(Nvl(vJan,"-"),"%","")) And IsNumeric(Replace(Nvl(vFev,"-"),"%","")) Then vAHVarFev = iif(vFormatacao = "P", Replace(vFev,"%","") - Replace(vJan,"%",""), ((Replace(vFev,"%","") / Replace(vJan,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vFev,"-"),"%","")) And IsNumeric(Replace(Nvl(vMar,"-"),"%","")) Then vAHVarMar = iif(vFormatacao = "P", Replace(vMar,"%","") - Replace(vFev,"%",""), ((Replace(vMar,"%","") / Replace(vFev,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vMar,"-"),"%","")) And IsNumeric(Replace(Nvl(vAbr,"-"),"%","")) Then vAHVarAbr = iif(vFormatacao = "P", Replace(vAbr,"%","") - Replace(vMar,"%",""), ((Replace(vAbr,"%","") / Replace(vMar,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vAbr,"-"),"%","")) And IsNumeric(Replace(Nvl(vMai,"-"),"%","")) Then vAHVarMai = iif(vFormatacao = "P", Replace(vMai,"%","") - Replace(vAbr,"%",""), ((Replace(vMai,"%","") / Replace(vAbr,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vMai,"-"),"%","")) And IsNumeric(Replace(Nvl(vJun,"-"),"%","")) Then vAHVarJun = iif(vFormatacao = "P", Replace(vJun,"%","") - Replace(vMai,"%",""), ((Replace(vJun,"%","") / Replace(vMai,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vJun,"-"),"%","")) And IsNumeric(Replace(Nvl(vJul,"-"),"%","")) Then vAHVarJul = iif(vFormatacao = "P", Replace(vJul,"%","") - Replace(vJun,"%",""), ((Replace(vJul,"%","") / Replace(vJun,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vJul,"-"),"%","")) And IsNumeric(Replace(Nvl(vAgo,"-"),"%","")) Then vAHVarAgo = iif(vFormatacao = "P", Replace(vAgo,"%","") - Replace(vJul,"%",""), ((Replace(vAgo,"%","") / Replace(vJul,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vAgo,"-"),"%","")) And IsNumeric(Replace(Nvl(vSet,"-"),"%","")) Then vAHVarSet = iif(vFormatacao = "P", Replace(vSet,"%","") - Replace(vAgo,"%",""), ((Replace(vSet,"%","") / Replace(vAgo,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vSet,"-"),"%","")) And IsNumeric(Replace(Nvl(vOut,"-"),"%","")) Then vAHVarOut = iif(vFormatacao = "P", Replace(vOut,"%","") - Replace(vSet,"%",""), ((Replace(vOut,"%","") / Replace(vSet,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vOut,"-"),"%","")) And IsNumeric(Replace(Nvl(vNov,"-"),"%","")) Then vAHVarNov = iif(vFormatacao = "P", Replace(vNov,"%","") - Replace(vOut,"%",""), ((Replace(vNov,"%","") / Replace(vOut,"%","")) - 1) * 100)
+        If IsNumeric(Replace(Nvl(vNov,"-"),"%","")) And IsNumeric(Replace(Nvl(vDez,"-"),"%","")) Then vAHVarDez = iif(vFormatacao = "P", Replace(vDez,"%","") - Replace(vNov,"%",""), ((Replace(vDez,"%","") / Replace(vNov,"%","")) - 1) * 100)
+        
+        If IsNumeric(vAHVarFev) Then vAHVarFev = FormatNumber(vAHVarFev, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarMar) Then vAHVarMar = FormatNumber(vAHVarMar, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarAbr) Then vAHVarAbr = FormatNumber(vAHVarAbr, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarMai) Then vAHVarMai = FormatNumber(vAHVarMai, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarJun) Then vAHVarJun = FormatNumber(vAHVarJun, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarJul) Then vAHVarJul = FormatNumber(vAHVarJul, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarAgo) Then vAHVarAgo = FormatNumber(vAHVarAgo, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarSet) Then vAHVarSet = FormatNumber(vAHVarSet, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarOut) Then vAHVarOut = FormatNumber(vAHVarOut, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarNov) Then vAHVarNov = FormatNumber(vAHVarNov, 1) & iif(vFormatacao = "P"," p.p","%") End If
+        If IsNumeric(vAHVarDez) Then vAHVarDez = FormatNumber(vAHVarDez, 1) & iif(vFormatacao = "P"," p.p","%") End If
+
+%>
+<tr role="row" class="nvl<%=vNivel%> ah-var ui-widget-content jqgrow ui-row-ltr">
+    <td role="gridcell">A.H VAR <%=iif(vFormatacao = "P","p.p","%")%></td>
+    <%
+    If vFrequencia Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vMeta Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (FEV): <%=vAHVarFev%>"><%=vAHVarFev%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (MAR): <%=vAHVarMar%>"><%=vAHVarMar%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (ABR): <%=vAHVarAbr%>"><%=vAHVarAbr%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (MAI): <%=vAHVarMai%>"><%=vAHVarMai%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (JUN): <%=vAHVarJun%>"><%=vAHVarJun%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (JUL): <%=vAHVarJul%>"><%=vAHVarJul%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (AGO): <%=vAHVarAgo%>"><%=vAHVarAgo%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (SET): <%=vAHVarSet%>"><%=vAHVarSet%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (OUT): <%=vAHVarOut%>"><%=vAHVarOut%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (NOV): <%=vAHVarNov%>"><%=vAHVarNov%></span></td>
+    <td role="gridcell"><span title="A.H VAR <%=iif(vFormatacao = "P","p.p","%")%> (DEZ): <%=vAHVarDez%>"><%=vAHVarDez%></span></td>
+    <%
+    If vTotalAnual Or vMediaAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vTotalAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vMediaAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+
+    <%
+    If vAvAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+
+    <%
+    ' --------- Valores ano anterior ---------
+
+    If vTotalAnual Or vMediaAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vTotalAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vMediaAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+    <%
+    If vAvAnual Then
+    %>
+    <td role="gridcell">&nbsp;</td>
+    <%
+    End If
+    %>
+</tr>
+<% End If %>
+
+<%                          
+                    Response.Flush
+                End If
+            End If
+        End If
+    Next
+End If
+%>
